@@ -37,11 +37,9 @@
 
 ![浅色模式](Documentation/screenshots/radar-light.png)
 
-![深色模式](Documentation/screenshots/radar-dark.png)
-
 ![窄窗口](Documentation/screenshots/radar-compact.png)
 
-左侧项目列表是独立的一整块，边栏开关由系统放在标题栏最左侧，与窗口红绿灯同一条水平线；详情页展示最新 Release、可折叠的 Release Notes 与 DMG 附件。
+左侧项目列表是独立的一整块，边栏开关由系统放在标题栏最左侧，与窗口红绿灯同一条水平线；详情页展示最新 Release、可折叠的 Release Notes 与 DMG 附件。截图首位的 `zrtnb6/Radar` 即首次安装预置的默认项目，正监控 Radar 自己的 v1.2.0 发布。
 
 ## 功能特性
 
