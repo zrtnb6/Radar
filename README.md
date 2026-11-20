@@ -37,15 +37,11 @@
 
 ![浅色模式](Documentation/screenshots/radar-light.png)
 
-![窄窗口](Documentation/screenshots/radar-compact.png)
-
-左侧项目列表是独立的一整块，边栏开关由系统放在标题栏最左侧，与窗口红绿灯同一条水平线；详情页展示最新 Release、可折叠的 Release Notes 与 DMG 附件。截图首位的 `zrtnb6/Radar` 即首次安装预置的默认项目，正监控 Radar 自己的 v1.2.0 发布。
-
 ## 功能特性
 
 - **纯原生**：Swift / SwiftUI / SwiftData，无 Electron、Tauri 或 WebView 主界面
 - **Release 监控**：自动拉取正式 Release，Draft / Prerelease 默认过滤（可选监控 Prerelease）
-- **DMG 识别**：按文件扩展名识别 DMG 附件，大小写不敏感
+- **DMG 识别**：按文件扩展名识别 DMG 附件
 - **App 内下载**：附件直链下载到 `~/Downloads`，行内进度、取消、重试，同名不覆盖
 - **系统通知**：发现新版本 / 附件变化时推送，事件持久化去重，同一 Release 只提醒一次
 - **首次添加即基线**：添加项目时对历史版本建立已读基线，不为旧版本轰炸通知
@@ -57,31 +53,20 @@
 
 ## 安装
 
-从 [Releases](https://github.com/zrtnb6/Radar/releases) 或仓库内 [`dist/Radar-1.2.0.dmg`](dist/Radar-1.2.0.dmg) 下载（2.0 MB，1,987,765 字节，Universal `x86_64` / `arm64`，macOS 14.0+）。
+从 [Releases](https://github.com/zrtnb6/Radar/releases) 或仓库内 [`dist/Radar-1.2.0.dmg`](dist/Radar-1.2.0.dmg) 下载（Universal `x86_64` / `arm64`，macOS 14.0+）。
 
-1. 双击 DMG 挂载，把 `Radar.app` 拖入 `Applications`，然后推出镜像。
-2. **首次打开**：应用使用本地 ad-hoc 签名、未做 Developer ID 签名与公证，Gatekeeper 会拦截。在 Finder 中右键点击 App → 「打开」→ 再点「打开」；或在「系统设置 → 隐私与安全性」中点「仍要打开」。只需一次。
-3. **升级安装**：先退出应用，将新版拖入 `Applications` 并选择「替换」；已添加的仓库、Token 与设置都保留在本地（SwiftData 容器 + Keychain）。
-
-## 首次安装的默认项目
-
-首次安装并启动后，项目列表会自动出现一个默认项目 **[`zrtnb6/Radar`](https://github.com/zrtnb6/Radar)** —— Radar 监控它自己，既是开箱即用的示例，也能直接收到 Radar 自身的新版本提醒。
-
-这一行为的设计细节：
-
-- **本地写入，不依赖网络**：默认项目直接写入 SwiftData，离线安装也能立刻看到；联网后由常规刷新补齐头像、Star 数与 Release 列表。
-- **首次刷新只建立基线**：默认项目第一次被检查时，已有的历史 Release 全部标记为已读，不会推送任何通知；之后的真正新版本才会提醒。
-- **可删除，且不会复活**：右键删除默认项目后，重启应用也不会重新出现（一次性标记保存在 UserDefaults）。
-- **升级用户不受影响**：已经添加过项目的用户不会被强行塞入这个默认项目。
+1. 双击 DMG 挂载，把 `Radar.app` 拖入 `Applications`。
+2. **首次打开**：应用使用本地 ad-hoc 签名、未做 Developer ID 签名与公证，Gatekeeper 会拦截。在 Finder 中右键点击 App → 「打开」→ 再点「打开」；或在「系统设置 → 隐私与安全性」中点「仍要打开」。
+3. **升级安装**：先退出应用，将新版拖入 `Applications` 并选择「替换」；已添加的仓库、Token 与设置都保留在本地。
 
 ## 使用流程
 
-1. 点击工具栏 `+` 或按 `⌘N`。
+1. 点击工具栏按钮 `+` 或按快捷键 `⌘N`。
 2. 粘贴仓库链接，例如 `https://github.com/owner/repository`、`/releases` 或 `/releases/tag/version`。
 3. Radar 自动解析 Owner/Repository，查询仓库、正式 Release 与附件，并建立「已读」基线。
 4. 后续检查发现新 Release 时写入本地缓存、显示未读标记并发送系统通知；点击通知直接跳到对应 Release。
-5. 点击附件右侧的「下载」，App 在内建下载器中直接拉取直链并保存到 `~/Downloads`，不跳转浏览器。
-6. Release Notes 默认折叠，点标题左侧三角展开；切换项目自动收起。
+5. 点击附件右侧的「下载」，App 在内建下载器中直接拉取直链并保存到 `~/Downloads`，无需跳转浏览器。
+6. Release Notes 默认折叠，可手动展开；切换项目自动收起。
 
 ## GitHub 令牌（可选，但建议配置）
 
@@ -92,18 +77,16 @@ GitHub REST API 对**未认证请求**按来源 IP 限流为 **60 次 / 小时**
 - 在 GitHub 创建 [Fine-grained PAT](https://github.com/settings/personal-access-tokens)（设置页内有直达链接），粘贴后点「保存令牌」。
 - 点「验证令牌 / 查看配额」会调用 `GET /rate_limit`（不消耗配额），`limit` 从 60 变为 5000 即表示令牌生效。
 - 令牌保存在系统 Keychain，不写入数据库、日志或 UserDefaults；保存后立即生效，无需重启。
-- 公开仓库**仍可不填令牌**；令牌只提升 API 限额，访问私有仓库还需令牌具备对应仓库的读取权限。
-- 遇到限流或 401 时，错误提示会直接指引到该设置项。
+- 访问私有仓库时需令牌具备对应仓库的读取权限。
 
 ## 附件下载
 
-- **手动触发**：只有点击才会下载；刷新或启动时不会自动下载，也不会自动打开、安装或执行下载内容。
-- **进度与取消**：附件行内显示进度条与百分比，可随时取消；失败时显示原因并提供「重试」。
-- **同名不覆盖**：目标文件已存在时自动追加 ` 2`、` 3` 后缀。
+- **手动触发**：只有主动点击才会下载；不会自动打开、安装或执行下载内容。
+- **进度与取消**：附件行内显示进度条与百分比，可随时取消；失败时显示原因并提供「重试」选项。
+- **同名不覆盖**：目标文件已存在时自动追加 `序号` 后缀。
 - **完成后**：附件行显示「已下载」，可点「在 Finder 中显示」定位文件。
 - **下载中心**：工具栏「下载」按钮查看全部任务，按钮上显示进行中数量；完成的任务收为单行。
 - **地址校验**：只接受 `https://github.com` 直链，拒绝 `http`、其它域名、带账号密码的 URL；文件名去掉路径分隔符与控制字符，防止路径穿越。
-- **令牌不外发**：下载请求不携带 GitHub Token，避免认证头被带到重定向后的 CDN；因此当前直链下载面向公开仓库附件。
 - **沙箱权限**：启用 App Sandbox，仅为写入「下载」文件夹申请 `com.apple.security.files.downloads.read-write`。
 
 ## 隐私与安全
