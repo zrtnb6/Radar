@@ -1,0 +1,23 @@
+# macOS
+.DS_Store
+
+# Xcode
+.build/
+DerivedData/
+build/
+build-dd/
+build-release/
+xcuserdata/
+*.xcuserstate
+*.xcresult
+
+# 构建与测试日志
+*.log
+
+# DMG 打包临时目录
+dmg-staging/
+
+# 交付包：仓库内只保留当前版本 DMG，历史版本留在本地不入库
+dist/*.dmg
+dist/*.zip
+!dist/Radar-1.2.0.dmg
